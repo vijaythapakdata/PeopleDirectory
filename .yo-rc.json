@@ -1,0 +1,19 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "useGulp": false,
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.20.0",
+    "sdksVersions": {},
+    "version": "1.22.2",
+    "libraryName": "people-directory",
+    "libraryId": "b5081911-e803-4aa9-9306-3be8902faf07",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "PeopleDirectory",
+    "solutionShortDescription": "PeopleDirectory description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

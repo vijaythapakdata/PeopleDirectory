@@ -9,6 +9,8 @@ import Paging from './Paging/Paging';
 import { IPerson } from '../interfaces/IPerson';
 import { Dropdown, IDropdownOption, Text } from '@fluentui/react';
 import './global.css'
+import AlphabetFilter from './AlphabetFilter/AlphabetFilter';
+import ProfilePanel from './ProfilePanel/ProfilePanel';
 
 interface IStaffDirectoryState {
   search: string;
@@ -16,6 +18,8 @@ interface IStaffDirectoryState {
   items: IPerson[];
   selected: string | number;
    letter: string; // 👈
+    selectedUser: any;      // 👈 better type later
+  isPanelOpen: boolean;
 }
 
 const PeopleDirectory :React.FC<IPeopleDirectoryProps>=({
@@ -33,7 +37,9 @@ const PeopleDirectory :React.FC<IPeopleDirectoryProps>=({
     page: 1,
     items: [],
     selected: '',
-     letter: '' // '' means ALL
+     letter: '', // '' means ALL,
+     selectedUser: null,
+isPanelOpen: false
   });
   const { total, searchByText, getNextPage, loading, results } =
     useSearch(context, group, pageSize);
@@ -124,7 +130,15 @@ const PeopleDirectory :React.FC<IPeopleDirectoryProps>=({
       items: [...s.items, ...results]
     }));
   }, [results]);
-  const filteredItems = React.useMemo(() => {
+//   const filteredItems = React.useMemo(() => {
+//   if (!state.letter) return state.items;
+
+//   return state.items.filter((item) =>
+//     item.displayName?.toLowerCase().startsWith(state.letter.toLowerCase())
+//   );
+// }, [state.items, state.letter]);
+
+const filteredItems = React.useMemo(() => {
   if (!state.letter) return state.items;
 
   return state.items.filter((item) =>
@@ -132,14 +146,23 @@ const PeopleDirectory :React.FC<IPeopleDirectoryProps>=({
   );
 }, [state.items, state.letter]);
 
- const displayedItems = React.useMemo(() => {
+
+//  const displayedItems = React.useMemo(() => {
+//   const { page } = state;
+//   const startIndex = (page - 1) * pageSize;
+//   const endIndex = page * pageSize;
+
+//   return filteredItems.slice(startIndex, endIndex);
+// }, [filteredItems, state.page, pageSize]);
+  
+const displayedItems = React.useMemo(() => {
   const { page } = state;
   const startIndex = (page - 1) * pageSize;
   const endIndex = page * pageSize;
 
   return filteredItems.slice(startIndex, endIndex);
-}, [filteredItems, state.page, pageSize]);
-  return(
+}, [filteredItems, state.page]);
+return(
     <>
     <section className={styles.peopleDirectory}>
       <div>
@@ -174,7 +197,7 @@ const PeopleDirectory :React.FC<IPeopleDirectoryProps>=({
             />
           )}
         </div>
-        <div style={{ marginTop: 10 }}>
+        {/* <div style={{ marginTop: 10 }}>
   {['All', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')].map((char) => (
     <button
       key={char}
@@ -203,7 +226,17 @@ const PeopleDirectory :React.FC<IPeopleDirectoryProps>=({
       {char}
     </button>
   ))}
-</div>
+</div> */}
+<AlphabetFilter
+  selected={state.letter}
+  onSelect={(letter) =>
+    setState((s) => ({
+      ...s,
+      letter,
+      page: 1
+    }))
+  }
+/>
         <br style={{ margin: '2px 0' }} />
         <Paging
           count={total}
@@ -212,7 +245,27 @@ const PeopleDirectory :React.FC<IPeopleDirectoryProps>=({
           onPageChange={goToPage}
         />
         <br style={{ margin: '6px 0' }} />
-        <Results results={displayedItems} loading={loading} />
+        <Results
+  results={displayedItems}
+  loading={loading}
+  onUserClick={(user) =>
+    setState((s) => ({
+      ...s,
+      selectedUser: user,
+      isPanelOpen: true
+    }))
+  }
+/>
+<ProfilePanel
+  user={state.selectedUser}
+  isOpen={state.isPanelOpen}
+  onDismiss={() =>
+    setState((s) => ({
+      ...s,
+      isPanelOpen: false
+    }))
+  }
+/>
       </div>
     </section>
     </>

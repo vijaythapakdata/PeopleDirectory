@@ -34,20 +34,18 @@ const Result: React.FC<IResultProps> = ({ dataContext }) => {
 
   return (
     <div className={styles.result}>
-      <Person
-        userId={person.id}
-        personDetails={{
-          ...person,
-          personImage: getPhoto(person.picture ?? '')
-        }}
-        personCardInteraction={PersonCardInteraction.hover as any}
-        line1Property='displayName'
-        line2Property='jobTitle'
-        line3Property='department'
-        view={PersonViewType.threelines as any}
-        className={styles.person}
-        disableImageFetch
-      />
+     <Person
+  userId={person.id}
+  personDetails={{
+    ...person
+  }}
+  personCardInteraction={PersonCardInteraction.hover as any}
+  line1Property='displayName'
+  line2Property='jobTitle'
+  line3Property='department'
+  view={PersonViewType.threelines as any}
+  className={styles.person}
+/>
     </div>
   );
 };
